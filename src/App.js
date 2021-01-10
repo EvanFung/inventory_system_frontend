@@ -1,23 +1,24 @@
-import logo from './logo.svg';
-import './App.css';
+import { BrowserRouter, Switch, Route } from 'react-router-dom';
+import ProductScreen from './screens/ProductScreen';
+import ProductDetail from './screens/ProductDetail';
+import SelectButton from './component/SelectButton';
+import './App.css'
+const productOptions = ['CREATE PRODUCT', 'IMPORT PRODUCT FROM CSV', 'IMPORT STOCKS', 'IMPORT STOCKS FROM CSV'];
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div>
+      <div className="navigation">
+        <SelectButton className="item" options={productOptions} />
+      </div>
+      <BrowserRouter>
+        <Switch>
+          <Route exact path="/">
+            <ProductScreen />
+          </Route>
+          <Route exact path="/products/:productId" render={({ match, location }) => <ProductDetail productId={match.params.productId} />} />
+        </Switch>
+      </BrowserRouter>
     </div>
   );
 }
