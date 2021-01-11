@@ -53,12 +53,44 @@ const stocksColumns = [
         width: 160,
     },
 ];
+
+
+const statusColumns = [
+    {
+        field: 'warehouseId',
+        headerName: 'id',
+        width: 160,
+    },
+    {
+        field: 'warehouseName',
+        headerName: 'Warehouse Name',
+        width: 160,
+    },
+    {
+        field: 'total',
+        headerName: 'total',
+        width: 160,
+    },
+    {
+        field: 'type',
+        headerName: 'Type',
+        width: 160,
+    },
+    {
+        field: 'productId',
+        headerName: 'productId',
+        width: 160,
+    },
+];
+
+
 function ProductDetail(props) {
     const classes = useStyles();
     const [data, setData] = useState([]);
     const [stock, setStock] = useState([]);
     const [isLoading, setIsLoading] = useState(false);
     const [isError, setIsError] = useState(false);
+    const [statusStock, setStatusStock] = useState([]);
     let history = useHistory();
     const { productId } = props;
     useEffect(() => {
@@ -74,6 +106,7 @@ function ProductDetail(props) {
             } catch (error) {
                 setIsError(true);
             }
+            setIsLoading(false);
         }
 
         //fetch the product
@@ -88,9 +121,33 @@ function ProductDetail(props) {
             } catch (error) {
                 setIsError(true);
             }
+            setIsLoading(false);
+
         }
+
+        const fetchStatusStock = async () => {
+            setIsLoading(true);
+            setIsError(false);
+            try {
+                let result = await StockAPI.getStatus(productId);
+                let newResult = result.map(status => {
+                    return {
+                        id: status.warehouseId,
+                        ...status,
+                    }
+                });
+                setStatusStock(newResult);
+                setIsLoading(false);
+            } catch (error) {
+                setIsError(true);
+            }
+            setIsLoading(false);
+        }
+
         fetchProduct();
         fetchStock();
+        fetchStatusStock();
+
     }, []);
 
     return (
@@ -112,9 +169,17 @@ function ProductDetail(props) {
                     </Paper>
                 </Grid>
                 <Grid item xs={12}>
-                    <Grid item xs={12}><h3>Stock Status</h3></Grid>
+                    <Grid item xs={12}><h3>In-Stock Status</h3></Grid>
                     <div style={{ height: 400, width: '100%' }}>
                         <DataGrid rows={stock} columns={stocksColumns} pageSize={5} onRowClick={(rowParams) => {
+                            const { row } = rowParams;
+                        }} />
+                    </div>
+                </Grid>
+                <Grid item xs={12}>
+                    <Grid item xs={12}><h3>Inventory Status</h3></Grid>
+                    <div style={{ height: 400, width: '100%' }}>
+                        <DataGrid rows={statusStock} columns={statusColumns} pageSize={5} onRowClick={(rowParams) => {
                             const { row } = rowParams;
                         }} />
                     </div>
