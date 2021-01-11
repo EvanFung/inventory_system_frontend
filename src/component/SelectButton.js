@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useRef } from 'react';
 import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button';
 import ButtonGroup from '@material-ui/core/ButtonGroup';
@@ -9,12 +9,14 @@ import Paper from '@material-ui/core/Paper';
 import Popper from '@material-ui/core/Popper';
 import MenuItem from '@material-ui/core/MenuItem';
 import MenuList from '@material-ui/core/MenuList';
-
+import ModalForm from '../component/ModalForm';
 
 export default function SplitButton(props) {
-    const [open, setOpen] = React.useState(false);
-    const anchorRef = React.useRef(null);
-    const [selectedIndex, setSelectedIndex] = React.useState(1);
+    const [open, setOpen] = useState(false);
+    const anchorRef = useRef(null);
+    const [selectedIndex, setSelectedIndex] = useState(1);
+    const [openModal, setOpenModal] = useState(false);
+
     const { options } = props;
     const handleClick = () => {
         console.info(`You clicked ${options[selectedIndex]}`);
@@ -22,6 +24,16 @@ export default function SplitButton(props) {
 
     const handleMenuItemClick = (event, index) => {
         setSelectedIndex(index);
+        if (index == 0) {
+            console.log('create product');
+            setOpenModal(true);
+        } else if (index == 1) {
+            console.log('csv');
+        } else if (index == 2) {
+            console.log('csv2')
+        } else if (index == 3) {
+            console.log('csv3')
+        }
         setOpen(false);
     };
 
@@ -80,6 +92,9 @@ export default function SplitButton(props) {
                         </Grow>
                     )}
                 </Popper>
+            </Grid>
+            <Grid item xs={12}>
+                <ModalForm open={openModal} setOpen={setOpenModal} />
             </Grid>
         </Grid>
     );

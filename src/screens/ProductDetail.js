@@ -76,11 +76,6 @@ const statusColumns = [
         headerName: 'Type',
         width: 160,
     },
-    {
-        field: 'productId',
-        headerName: 'productId',
-        width: 160,
-    },
 ];
 
 
